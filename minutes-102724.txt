@@ -1,0 +1,8 @@
+10/27/2024
+#Things to do
+
+- Maria: make script to flip
+- Avi: run model on all data and see what we get
+- Brian: rotate images 
+- Connor: [i forget ngl]
+- All: mess with layers, learning rates, and epochs to see if we can beat 99.3% accuracy!
