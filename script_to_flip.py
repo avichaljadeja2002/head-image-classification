@@ -12,7 +12,7 @@ os.makedirs(augmented_folder, exist_ok=True)
 # Iterate through each file in the folder
 for filename in os.listdir(folder_path):
     file_path = os.path.join(folder_path, filename)
-
+    print("Test")
     # Skip files with a .bad extension
     if filename.lower().endswith('.bad'):
         print(f"Skipping file with .bad extension: {filename}")
