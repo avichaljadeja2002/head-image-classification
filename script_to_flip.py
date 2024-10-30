@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 # Set the path to the folder containing the images
-person_name = "tammo"
+person_name = "an2i"
 folder_path = "faces/" + person_name
 
 # Create a new folder for the augmented dataset
