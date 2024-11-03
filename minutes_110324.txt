@@ -1,0 +1,9 @@
+11/3/2024
+#Things to do
+- separate models for each classifier
+
+- Maria: 
+- Avi: keep training data, look into grayscale --> RGB conversion, ask profs about progress report grade
+- Brian: make emotions classifier
+- Connor: run on personal PC if possible, make sunglasses classifier
+- All: help each other out :D
