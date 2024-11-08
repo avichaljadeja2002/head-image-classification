@@ -7,8 +7,8 @@
 </head>
 <body>
 
-    <h2>Upload a png Image</h2>
-    <input type="file" id="fileInput" accept="image/png" capture="environment">
+    <h2>Upload an Image</h2>
+    <input type="file" id="fileInput" accept="image/jpeg, image/png" capture="environment">
     <button id="uploadButton">Upload and Predict</button>
     <p id="fileName"></p>
     <p id="predictionResult"></p>
@@ -24,10 +24,11 @@
         // Listen for file selection
         fileInput.addEventListener('change', (event) => {
             selectedFile = event.target.files[0];
-            if (selectedFile && selectedFile.type === "image/png") {
+            // Check if the selected file is of type PNG, JPEG, or JPG
+            if (selectedFile && (selectedFile.type === "image/png" || selectedFile.type === "image/jpeg")) {
                 fileNameDisplay.textContent = `Selected file: ${selectedFile.name}`;
             } else {
-                fileNameDisplay.textContent = "No png file selected";
+                fileNameDisplay.textContent = "No valid image file selected (only JPEG, JPG, or PNG)";
                 selectedFile = null;
             }
         });
@@ -35,7 +36,7 @@
         // Handle upload and predict
         uploadButton.addEventListener('click', async () => {
             if (!selectedFile) {
-                alert("Please select a png file first.");
+                alert("Please select a valid image file first.");
                 return;
             }
 
