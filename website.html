@@ -7,24 +7,56 @@
 </head>
 <body>
 
-    <h2>Upload a JPEG Image</h2>
-    <input type="file" id="fileInput" accept="image/jpeg" capture="environment">
+    <h2>Upload a png Image</h2>
+    <input type="file" id="fileInput" accept="image/png" capture="environment">
+    <button id="uploadButton">Upload and Predict</button>
     <p id="fileName"></p>
+    <p id="predictionResult"></p>
 
     <script>
-        // Get the file input and display elements
         const fileInput = document.getElementById('fileInput');
         const fileNameDisplay = document.getElementById('fileName');
+        const uploadButton = document.getElementById('uploadButton');
+        const predictionResult = document.getElementById('predictionResult');
+
+        let selectedFile = null;
 
         // Listen for file selection
         fileInput.addEventListener('change', (event) => {
-            // Get the selected file
-            const file = event.target.files[0];
-            // Display the file name if a file is selected and it's a jpeg
-            if (file && file.type === "image/jpeg") {
-                fileNameDisplay.textContent = `Selected file: ${file.name}`;
+            selectedFile = event.target.files[0];
+            if (selectedFile && selectedFile.type === "image/png") {
+                fileNameDisplay.textContent = `Selected file: ${selectedFile.name}`;
             } else {
-                fileNameDisplay.textContent = "No JPEG file selected";
+                fileNameDisplay.textContent = "No png file selected";
+                selectedFile = null;
+            }
+        });
+
+        // Handle upload and predict
+        uploadButton.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert("Please select a png file first.");
+                return;
+            }
+
+            // Create FormData to send the file
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    predictionResult.textContent = `Orientation: ${result.predicted_orientation}, Confidence: ${result.prediction_confidence}`;
+                } else {
+                    const error = await response.json();
+                    predictionResult.textContent = `Error: ${error.error}`;
+                }
+            } catch (error) {
+                predictionResult.textContent = `Error: ${error.message}`;
             }
         });
     </script>
