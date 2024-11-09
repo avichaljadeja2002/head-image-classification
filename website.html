@@ -3,46 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload</title>
+    <title>File Upload and Webcam Capture</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-wrapper {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .file-input-wrapper:hover {
+            background-color: #45a049;
+        }
+
+        button {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #007B9D;
+        }
+
+        #fileName {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        #predictionResult {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #imageContainer, #webcamContainer {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Align webcam image and button vertically */
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+
+        #webcamPreview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+
+        #webcamStream {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        #captureButton {
+            background-color: #FF6347;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px; /* Add space between webcam stream and button */
+        }
+
+        #captureButton:hover {
+            background-color: #FF4F37;
+        }
+    </style>
 </head>
 <body>
 
-    <h2>Upload an Image</h2>
-    <input type="file" id="fileInput" accept="image/jpeg, image/png" capture="environment">
-    <button id="uploadButton">Upload and Predict</button>
-    <p id="fileName"></p>
-    <p id="predictionResult"></p>
+    <div class="container">
+        <h2>Upload an Image or Use Webcam</h2>
+        <label for="fileInput" class="file-input-wrapper">Choose Image</label>
+        <input type="file" id="fileInput" accept="image/jpeg, image/png">
+        <button id="uploadButton">Upload and Predict</button>
+        <p id="fileName"></p>
+        <p id="predictionResult"></p>
+        
+        <!-- Image Preview Container -->
+        <div id="imageContainer">
+            <img id="imagePreview">
+        </div>
+
+        <!-- Webcam Capture Container -->
+        <div id="webcamContainer">
+            <video id="webcamStream" autoplay></video>
+            <button id="captureButton">Capture Image</button>
+            <img id="webcamPreview">
+        </div>
+    </div>
 
     <script>
         const fileInput = document.getElementById('fileInput');
         const fileNameDisplay = document.getElementById('fileName');
         const uploadButton = document.getElementById('uploadButton');
         const predictionResult = document.getElementById('predictionResult');
+        const imagePreview = document.getElementById('imagePreview');
+        const webcamStream = document.getElementById('webcamStream');
+        const webcamPreview = document.getElementById('webcamPreview');
+        const captureButton = document.getElementById('captureButton');
 
         let selectedFile = null;
+        let webcamImage = null;
+
+        // Initialize webcam stream
+        async function startWebcam() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                });
+                webcamStream.srcObject = stream;
+                webcamStream.style.display = 'block';
+            } catch (error) {
+                console.error("Error accessing webcam: ", error);
+            }
+        }
+
+        // Capture the image from the webcam
+        captureButton.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = webcamStream.videoWidth;
+            canvas.height = webcamStream.videoHeight;
+            context.drawImage(webcamStream, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/png');
+            webcamImage = dataUrl;
+            webcamPreview.src = dataUrl;
+            webcamPreview.style.display = 'block';
+            webcamStream.style.display = 'none';
+        });
 
         // Listen for file selection
         fileInput.addEventListener('change', (event) => {
             selectedFile = event.target.files[0];
-            // Check if the selected file is of type PNG, JPEG, or JPG
             if (selectedFile && (selectedFile.type === "image/png" || selectedFile.type === "image/jpeg")) {
                 fileNameDisplay.textContent = `Selected file: ${selectedFile.name}`;
+                const imageUrl = URL.createObjectURL(selectedFile);
+                imagePreview.src = imageUrl;
+                imagePreview.style.display = 'block';
             } else {
                 fileNameDisplay.textContent = "No valid image file selected (only JPEG, JPG, or PNG)";
                 selectedFile = null;
+                imagePreview.style.display = 'none';
             }
         });
 
         // Handle upload and predict
         uploadButton.addEventListener('click', async () => {
-            if (!selectedFile) {
-                alert("Please select a valid image file first.");
+            let imageToUpload = selectedFile;
+            if (webcamImage) {
+                // Use the image from webcam capture
+                const byteString = atob(webcamImage.split(',')[1]);
+                const arrayBuffer = new ArrayBuffer(byteString.length);
+                const uint8Array = new Uint8Array(arrayBuffer);
+                for (let i = 0; i < byteString.length; i++) {
+                    uint8Array[i] = byteString.charCodeAt(i);
+                }
+                imageToUpload = new Blob([uint8Array], { type: 'image/png' });
+            }
+
+            if (!imageToUpload) {
+                alert("Please select or capture an image.");
                 return;
             }
 
-            // Create FormData to send the file
             const formData = new FormData();
-            formData.append("file", selectedFile);
+            formData.append("file", imageToUpload);
 
             try {
                 const response = await fetch('http://localhost:5000/predict', {
@@ -60,6 +247,9 @@
                 predictionResult.textContent = `Error: ${error.message}`;
             }
         });
+
+        // Start the webcam when the page loads
+        startWebcam();
     </script>
 
 </body>
