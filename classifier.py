@@ -6,7 +6,7 @@ from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, UpSampling2D, GlobalAveragePooling2D, Dense, Input
 from tensorflow.keras.utils import to_categorical
 
-orientation_map = {0: 'up', 1: 'straight', 2: 'left', 3: 'right'}
+head_orientation_map = {0: 'up', 1: 'straight', 2: 'left', 3: 'right'}
 
 def load_images_with_labels(base_directory, use_subfolders_for_training=True):
     images = []
@@ -100,7 +100,7 @@ else:
     y_train_cat = to_categorical(y_train, num_classes=4)
     y_test_cat = to_categorical(y_test, num_classes=4)
 
-    model_path = 'combined_model.h5'
+    model_path = 'head_orientation_combined_model.h5'
     if os.path.exists(model_path):
         print("Loading existing model.")
         combined_model = load_model(model_path)
@@ -111,7 +111,7 @@ else:
             X_train,
             {'decoded': X_train, 'classification': y_train_cat},
             batch_size=64,
-            epochs=7,
+            epochs=50,
             validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
         )
         combined_model.save(model_path)
@@ -123,8 +123,8 @@ else:
     correct = 0
     wrong = 0
     for i in range(len(y_test)):
-        actual = orientation_map[y_test[i]]
-        predicted = orientation_map[predicted_labels[i]]
+        actual = head_orientation_map[y_test[i]]
+        predicted = head_orientation_map[predicted_labels[i]]
         if actual == predicted:
             correct += 1
         else:
