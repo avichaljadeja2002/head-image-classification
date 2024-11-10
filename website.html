@@ -146,11 +146,11 @@
         </div>
 
         <!-- Webcam Capture Container -->
-        <!-- <div id="webcamContainer">
-            <video id="webcamStream" autoplay></video>
+        <div id="webcamContainer">
+            <!-- <video id="webcamStream" autoplay></video>
             <button id="captureButton">Capture Image</button>
-            <img id="webcamPreview">
-        </div> -->
+            <img id="webcamPreview"> -->
+        </div>
     </div>
 
     <script>
@@ -167,32 +167,32 @@
         let webcamImage = null;
 
         // Initialize webcam stream
-        async function startWebcam() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: false
-                });
-                webcamStream.srcObject = stream;
-                webcamStream.style.display = 'block';
-            } catch (error) {
-                console.error("Error accessing webcam: ", error);
-            }
-        }
+        // async function startWebcam() {
+        //     try {
+        //         const stream = await navigator.mediaDevices.getUserMedia({
+        //             video: true,
+        //             audio: false
+        //         });
+        //         webcamStream.srcObject = stream;
+        //         webcamStream.style.display = 'block';
+        //     } catch (error) {
+        //         console.error("Error accessing webcam: ", error);
+        //     }
+        // }
 
         // Capture the image from the webcam
-        captureButton.addEventListener('click', () => {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.width = webcamStream.videoWidth;
-            canvas.height = webcamStream.videoHeight;
-            context.drawImage(webcamStream, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/png');
-            webcamImage = dataUrl;
-            webcamPreview.src = dataUrl;
-            webcamPreview.style.display = 'block';
-            webcamStream.style.display = 'none';
-        });
+        // captureButton.addEventListener('click', () => {
+        //     const canvas = document.createElement('canvas');
+        //     const context = canvas.getContext('2d');
+        //     canvas.width = webcamStream.videoWidth;
+        //     canvas.height = webcamStream.videoHeight;
+        //     context.drawImage(webcamStream, 0, 0, canvas.width, canvas.height);
+        //     const dataUrl = canvas.toDataURL('image/png');
+        //     webcamImage = dataUrl;
+        //     webcamPreview.src = dataUrl;
+        //     webcamPreview.style.display = 'block';
+        //     webcamStream.style.display = 'none';
+        // });
 
         // Listen for file selection
         fileInput.addEventListener('change', (event) => {
@@ -212,16 +212,16 @@
         // Handle upload and predict
         uploadButton.addEventListener('click', async () => {
             let imageToUpload = selectedFile;
-            if (webcamImage) {
-                // Use the image from webcam capture
-                const byteString = atob(webcamImage.split(',')[1]);
-                const arrayBuffer = new ArrayBuffer(byteString.length);
-                const uint8Array = new Uint8Array(arrayBuffer);
-                for (let i = 0; i < byteString.length; i++) {
-                    uint8Array[i] = byteString.charCodeAt(i);
-                }
-                imageToUpload = new Blob([uint8Array], { type: 'image/png' });
-            }
+            // if (webcamImage) {
+            //     // Use the image from webcam capture
+            //     const byteString = atob(webcamImage.split(',')[1]);
+            //     const arrayBuffer = new ArrayBuffer(byteString.length);
+            //     const uint8Array = new Uint8Array(arrayBuffer);
+            //     for (let i = 0; i < byteString.length; i++) {
+            //         uint8Array[i] = byteString.charCodeAt(i);
+            //     }
+            //     imageToUpload = new Blob([uint8Array], { type: 'image/png' });
+            // }
 
             if (!imageToUpload) {
                 alert("Please select or capture an image.");
