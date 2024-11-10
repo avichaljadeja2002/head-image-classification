@@ -102,21 +102,30 @@ else:
 
     model_path = 'head_orientation_combined_model.h5'
     if os.path.exists(model_path):
-        print("Loading existing model.")
+        print("Loading existing model and continuing training.")
         combined_model = load_model(model_path)
-    else:
-        print("Creating and training model.")
-        combined_model = create_combined_model(input_shape=(64, 64, 3), num_classes=4)
-        combined_model.fit(
-            X_train,
-            {'decoded': X_train, 'classification': y_train_cat},
-            batch_size=64,
-            epochs=50,
-            validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
+        combined_model.compile(
+            optimizer='adam',
+            loss={'decoded': 'mean_squared_error', 'classification': 'categorical_crossentropy'},
+            loss_weights={'decoded': 1.0, 'classification': 0.5},
+            metrics={'classification': ['accuracy']}
         )
-        combined_model.save(model_path)
-        print("Model saved after training.")
+    else:
+        print("Creating a new model.")
+        combined_model = create_combined_model(input_shape=(64, 64, 3), num_classes=4)
 
+    combined_model.fit(
+        X_train,
+        {'decoded': X_train, 'classification': y_train_cat},
+        batch_size=64,
+        epochs=50,
+        validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
+    )
+
+    combined_model.save(model_path)
+    print("Model saved after training.")
+
+    # Evaluate on test data
     decoded_imgs, predictions = combined_model.predict(X_test)
     predicted_labels = np.argmax(predictions, axis=1)
     
