@@ -31,7 +31,7 @@ def load_images_with_labels(base_directory, use_subfolders_for_training=True):
                     img_array = np.array(img) / 255.0
                     parts = filename.split('_')
                     if len(parts) > 1:
-                        orientation = parts[1]
+                        orientation = parts[2]
                         if orientation in label_map:
                             images.append(img_array)
                             labels.append(label_map[orientation])
