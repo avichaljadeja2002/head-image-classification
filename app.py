@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load the models
-emotion_combined_model = load_model("emotion_combined_model.h5")
+emotion_combined_model = load_model("emotion_model.h5")
 person_classifier_model = load_model("person_combined_model.h5")
 glasses_classifier = load_model("sunglasses_model.h5")
 orientation_classifier = load_model("head_orientation_combined_model.h5")
@@ -40,7 +40,7 @@ def predict():
         orientation = head_orientation_map[orientation_predicted_label]
         orientation_confidence = float(orientation_predictions[0][orientation_predicted_label])
 
-        decoded_img, emotion_prediction = emotion_prediction.predict(img_array)
+        decoded_img, emotion_prediction = emotion_combined_model.predict(img_array)
         emotion_predicted_label = np.argmax(emotion_prediction[0])
         emotion = emotion_orientation_map[emotion_predicted_label]
         emotion_confidence = float(emotion_prediction[0][emotion_predicted_label])
