@@ -52,7 +52,7 @@ def predict():
 
         decoded_img, sunglasses_prediction = glasses_classifier.predict(img_array)
         sunglasses_predicted_label = np.argmax(sunglasses_prediction[0])
-        sunglasses = people_orientation_map[sunglasses_predicted_label]
+        sunglasses = sunglasses_orientation_map[sunglasses_predicted_label]
         sunglasses_confidence = float(sunglasses_prediction[0][sunglasses_predicted_label])
 
         # Return all predictions in JSON format
