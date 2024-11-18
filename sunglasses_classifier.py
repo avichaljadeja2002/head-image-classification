@@ -71,22 +71,35 @@ def create_combined_model(input_shape, num_classes):
     return model
 if __name__ == "__main__":
     main_directory = 'faces'
-    X_train, y_train = [], []
-    X_test, y_test = [], []
-    paths_train, paths_test = [], []
+    X_train, y_train, paths_train = [], [], []
+    X_test, y_test, paths_test = [], [], []
 
     for person_folder in os.listdir(main_directory):
         person_path = os.path.join(main_directory, person_folder)
+        print(person_path)
         if os.path.isdir(person_path):
-            X_test_person, y_test_person, paths_test_person = load_images_with_labels(person_path, use_subfolders_for_training=False)
-            X_test.extend(X_test_person)
-            y_test.extend(y_test_person)
-            paths_test.extend(paths_test_person)
+            try:
+                X_test_main, y_test_main, paths_test_main = load_images_with_labels(person_path, use_subfolders_for_training=False)
+                X_test.extend(X_test_main)
+                y_test.extend(y_test_main)
+                paths_test.extend(paths_test_main)
+            except Exception as e:
+                print(f"No images found in main folder {person_folder}: {e}")
 
-            X_train_person, y_train_person, paths_train_person = load_images_with_labels(person_path, use_subfolders_for_training=True)
-            X_train.extend(X_train_person)
-            y_train.extend(y_train_person)
-            paths_train.extend(paths_train_person)
+            # Process subfolders
+            for subfolder in os.listdir(person_path):
+                subfolder_path = os.path.join(person_path, subfolder)
+                if os.path.isdir(subfolder_path):
+                    if 'colour' in subfolder.lower():
+                        X_test_subfolder, y_test_subfolder, paths_test_subfolder = load_images_with_labels(subfolder_path, use_subfolders_for_training=False)
+                        X_test.extend(X_test_subfolder)
+                        y_test.extend(y_test_subfolder)
+                        paths_test.extend(paths_test_subfolder)
+                    else:
+                        X_train_subfolder, y_train_subfolder, paths_train_subfolder = load_images_with_labels(subfolder_path, use_subfolders_for_training=True)
+                        X_train.extend(X_train_subfolder)
+                        y_train.extend(y_train_subfolder)
+                        paths_train.extend(paths_train_subfolder)
 
     X_train = np.array(X_train)
     y_train = np.array(y_train)
@@ -98,10 +111,9 @@ if __name__ == "__main__":
     elif len(X_train) == 0 or len(y_train) == 0:
         print("No training data found. Ensure the subdirectories contain images for training.")
     else:
-        y_train_cat = to_categorical(y_train, num_classes=2)
-        y_test_cat = to_categorical(y_test, num_classes=2)
-
         model_path = 'sunglasses_model.h5'
+        y_train_cat = to_categorical(y_train, num_classes=4)
+        y_test_cat = to_categorical(y_test, num_classes=4)
         if os.path.exists(model_path):
             print("Loading existing model and continuing training.")
             combined_model = load_model(model_path)
@@ -113,12 +125,16 @@ if __name__ == "__main__":
             )
         else:
             print("Creating a new model.")
-            combined_model = create_combined_model(input_shape=(64, 64, 3), num_classes=2)
-        
-        # Continue training
-        combined_model.fit(X_train, {'decoded': X_train, 'classification': y_train_cat}, 
-                        epochs=10, batch_size=32, validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat}))
-        
+            combined_model = create_combined_model(input_shape=(64, 64, 3), num_classes=4)
+
+        # combined_model.fit(
+        #     X_train,
+        #     {'decoded': X_train, 'classification': y_train_cat},
+        #     batch_size=64,
+        #     epochs=50,
+        #     validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
+        # )
+
         combined_model.save(model_path)
         print("Model saved after training.")
 
@@ -126,16 +142,29 @@ if __name__ == "__main__":
         decoded_imgs, predictions = combined_model.predict(X_test)
         predicted_labels = np.argmax(predictions, axis=1)
         
-        correct = 0
-        wrong = 0
+        regular_correct = 0
+        regular_wrong = 0
+        colour_correct = 0
+        colour_wrong = 0
+
         for i in range(len(y_test)):
             actual = sunglasses_orientation_map[y_test[i]]
             predicted = sunglasses_orientation_map[predicted_labels[i]]
+            is_colour = 'colour' in paths_test[i]
             if actual == predicted:
-                correct += 1
+                if is_colour:
+                    colour_correct += 1
+                else:
+                    regular_correct += 1
             else:
-                print(f"Got image wrong: {paths_test[i]}, predicted: {predicted}, actual: {actual}")
-                wrong += 1
+                if is_colour:
+                    colour_wrong += 1
+                    print(f"Colour Image Wrong: {paths_test[i]}, predicted: {predicted}, actual: {actual}")
+                else:
+                    regular_wrong += 1
+                    print(f"Regular Image Wrong: {paths_test[i]}, predicted: {predicted}, actual: {actual}")
 
-        print(f"Total Correct: {correct}")
-        print(f"Total Wrong: {wrong}")
+        print(f"Regular Correct: {regular_correct}")
+        print(f"Regular Wrong: {regular_wrong}")
+        print(f"Colour Correct: {colour_correct}")
+        print(f"Colour Wrong: {colour_wrong}")
