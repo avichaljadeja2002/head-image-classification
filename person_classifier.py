@@ -106,6 +106,29 @@ if __name__ == "__main__":
     X_test = np.array(X_test)
     y_test = np.array(y_test)
 
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import accuracy_score
+    from sklearn.preprocessing import StandardScaler
+
+    # Flatten the images for logistic regression input
+    X_train_flat = X_train.reshape(X_train.shape[0], -1)
+    X_test_flat = X_test.reshape(X_test.shape[0], -1)
+
+    # Scale the dataset to allow logistic regression to converge faster
+    scaler = StandardScaler()
+    X_train_flat_scaled = scaler.fit_transform(X_train_flat)
+    X_test_flat_scaled = scaler.transform(X_test_flat)
+
+    # Train logistic regression baseline
+    logistic_model = LogisticRegression(max_iter=100, solver='saga')
+    logistic_model.fit(X_train_flat_scaled, y_train)
+
+    # Predict and evaluate
+    y_pred_logistic = logistic_model.predict(X_test_flat_scaled)
+    baseline_accuracy = accuracy_score(y_test, y_pred_logistic)
+
+    print(f"Logistic Regression Baseline Accuracy: {baseline_accuracy * 100:.2f}%")
+
     if len(X_test) == 0 or len(y_test) == 0:
         print("No test data found. Ensure the main directory contains images for testing.")
     elif len(X_train) == 0 or len(y_train) == 0:
