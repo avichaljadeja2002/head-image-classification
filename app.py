@@ -19,6 +19,9 @@ head_orientation_map = {0: 'up', 1: 'straight', 2: 'left', 3: 'right'}
 sunglasses_orientation_map = {0: 'no_sunglasses', 1: 'sunglasses'}
 people_orientation_map = {0: 'an2i', 1: 'at33', 2: 'boland', 3: 'bpm', 4: 'ch4f', 5: 'cheyer', 6: 'choon', 7: 'danieln', 8: 'glickman',9: 'karyadi',10: 'kawamura', 11: 'kk49',12: 'megak',13: 'mitchell', 14: 'night', 15: 'phoebe',16: 'saavik',17: 'steffi',18: 'sz24',19: 'tammo'}
 emotion_orientation_map = {0: 'angry', 1: 'happy', 2: 'sad', 3: 'neutral'}
+@app.route('/healthcheck', methods=['GET'])
+def check():
+    return jsonify({"Success": "Server up!"}), 200
 
 @app.route('/predict', methods=['POST'])
 def predict():
