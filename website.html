@@ -107,7 +107,7 @@
         <button id="uploadButton">Upload and Predict</button>
         <p id="fileName"></p>
         <p id="predictionResult"></p>
-        
+
 
         <div id="imageContainer">
             <img id="imagePreview">
@@ -126,7 +126,18 @@
         // Function to call healthcheck on page load
         async function checkHealth() {
             try {
-                const response = await fetch('http://137.112.104.115:5000/healthcheck');
+                const response = await fetch('http://137.112.104.115:5000/healthcheck', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': '*/*',
+                        'Accept-Encoding': 'gzip, deflate',
+                        'Accept-Language': 'en-US,en;q=0.9',
+                        'Connection': 'keep-alive',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 
+                        'Origin': null  
+                    }
+                });
+
                 if (response.ok) {
                     console.log("Server is up and running!");
                 } else {

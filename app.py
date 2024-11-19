@@ -5,6 +5,7 @@ import numpy as np
 import os
 from flask_cors import CORS
 from tensorflow.keras.models import load_model
+import ssl
 
 app = Flask(__name__)
 CORS(app)
@@ -82,5 +83,7 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain('localhost.pem', 'localhost-key.pem')
+    app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=context)
 
