@@ -85,5 +85,6 @@ def predict():
 if __name__ == "__main__":
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.load_cert_chain('localhost.pem', 'localhost-key.pem')
-    app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=context)
+    app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=('olive-nedi-39.tiiny.site.pem', 'olive-nedi-39.tiiny.site-key.pem'))
+
 
