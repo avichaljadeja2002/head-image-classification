@@ -5,10 +5,6 @@ import numpy as np
 import os
 from flask_cors import CORS
 from tensorflow.keras.models import load_model
-from classifier import head_orientation_map
-from person_classifier import people_orientation_map
-from sunglasses_classifier import sunglasses_orientation_map
-from emotion_classifier import emotion_orientation_map
 
 app = Flask(__name__)
 CORS(app)
@@ -18,6 +14,11 @@ emotion_combined_model = load_model("emotion_model.h5")
 person_classifier_model = load_model("person_combined_model.h5")
 glasses_classifier = load_model("sunglasses_model.h5")
 orientation_classifier = load_model("head_orientation_combined_model.h5")
+
+head_orientation_map = {0: 'up', 1: 'straight', 2: 'left', 3: 'right'}
+sunglasses_orientation_map = {0: 'no_sunglasses', 1: 'sunglasses'}
+people_orientation_map = {0: 'an2i', 1: 'at33', 2: 'boland', 3: 'bpm', 4: 'ch4f', 5: 'cheyer', 6: 'choon', 7: 'danieln', 8: 'glickman',9: 'karyadi',10: 'kawamura', 11: 'kk49',12: 'megak',13: 'mitchell', 14: 'night', 15: 'phoebe',16: 'saavik',17: 'steffi',18: 'sz24',19: 'tammo'}
+emotion_orientation_map = {0: 'angry', 1: 'happy', 2: 'sad', 3: 'neutral'}
 
 @app.route('/predict', methods=['POST'])
 def predict():
