@@ -141,6 +141,7 @@
  
         uploadButton.addEventListener('click', async () => {
             if (!selectedFile) {
+                  //image not selected
                 alert("Please select an image.");
                 return;
             }
@@ -150,6 +151,7 @@
 
             try {
                 const response = await fetch('http://localhost:5000/predict', {
+                      //send image
                     method: 'POST',
                     body: formData
                 });
