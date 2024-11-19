@@ -108,7 +108,7 @@
         <p id="fileName"></p>
         <p id="predictionResult"></p>
         
-     
+
         <div id="imageContainer">
             <img id="imagePreview">
         </div>
@@ -123,7 +123,23 @@
 
         let selectedFile = null;
 
-       
+        // Function to call healthcheck on page load
+        async function checkHealth() {
+            try {
+                const response = await fetch('http://137.112.104.115:5000/healthcheck');
+                if (response.ok) {
+                    console.log("Server is up and running!");
+                } else {
+                    console.error("Server healthcheck failed.");
+                }
+            } catch (error) {
+                console.error("Error during healthcheck:", error);
+            }
+        }
+
+        // Call healthcheck when the page loads
+        window.onload = checkHealth;
+
         fileInput.addEventListener('change', (event) => {
             selectedFile = event.target.files[0];
             if (selectedFile && (selectedFile.type === "image/png" || selectedFile.type === "image/jpeg")) {
@@ -138,10 +154,10 @@
             }
         });
 
- 
+
         uploadButton.addEventListener('click', async () => {
             if (!selectedFile) {
-                  //image not selected
+                //image not selected
                 alert("Please select an image.");
                 return;
             }
@@ -151,7 +167,7 @@
 
             try {
                 const response = await fetch('http://137.112.104.115:5000/predict', {
-                      //send image
+                    //send image
                     method: 'POST',
                     body: formData
                 });
