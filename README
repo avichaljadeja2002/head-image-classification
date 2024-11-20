@@ -6,3 +6,8 @@ Instructions on how to run:
 website link: https://ad9f-137-112-225-48.ngrok-free.app/
 
 The website is very simple, just upload the image and hit the button to run.
+
+Our statistics for the individual classifiers using the training/testing split that Dr. Boutell mentioned:
+Sunglasses Classifier on 20 epochs: 96.0%
+Head Orientation Classifier on 30 epochs: 92.4%
+Emotion Classifier on 30 epochs: 91.9%
