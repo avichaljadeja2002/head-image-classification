@@ -98,6 +98,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -126,7 +127,7 @@
         // Function to call healthcheck on page load
         async function checkHealth() {
             try {
-                const response = await fetch('https://137.112.104.115:5000/healthcheck', {
+                const response = await fetch(' https://ad9f-137-112-225-48.ngrok-free.app/healthcheck', {
                     method: 'GET',
                     headers: {
                         'Accept': '*/*',
@@ -177,7 +178,7 @@
             formData.append("file", selectedFile);
 
             try {
-                const response = await fetch('https://137.112.104.115:5000/predict', {
+                const response = await fetch(' https://ad9f-137-112-225-48.ngrok-free.app/predict', {
                     //send image
                     method: 'POST',
                     body: formData
@@ -187,7 +188,6 @@
                     // Display all predictions
                     predictionResult.innerHTML = `
                         <strong>Emotion:</strong> ${result.emotion.predicted_label} (Confidence: ${result.emotion.prediction_confidence})<br>
-                        <strong>Person:</strong> ${result.person.predicted_label} (Confidence: ${result.person.prediction_confidence})<br>
                         <strong>Sunglasses:</strong> ${result.glasses.predicted_label} (Confidence: ${result.glasses.prediction_confidence})<br>
                         <strong>Orientation:</strong> ${result.orientation.predicted_orientation} (Confidence: ${result.orientation.prediction_confidence})
                     `;
@@ -202,4 +202,5 @@
     </script>
 
 </body>
+
 </html>

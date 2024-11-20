@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from PIL import Image
 import numpy as np
 import os
@@ -8,7 +8,6 @@ from tensorflow.keras.models import load_model
 import ssl
 
 app = Flask(__name__)
-CORS(app)
 
 # Load the models
 emotion_combined_model = load_model("emotion_model.h5")
@@ -20,6 +19,11 @@ head_orientation_map = {0: 'up', 1: 'straight', 2: 'left', 3: 'right'}
 sunglasses_orientation_map = {0: 'no_sunglasses', 1: 'sunglasses'}
 people_orientation_map = {0: 'an2i', 1: 'at33', 2: 'boland', 3: 'bpm', 4: 'ch4f', 5: 'cheyer', 6: 'choon', 7: 'danieln', 8: 'glickman',9: 'karyadi',10: 'kawamura', 11: 'kk49',12: 'megak',13: 'mitchell', 14: 'night', 15: 'phoebe',16: 'saavik',17: 'steffi',18: 'sz24',19: 'tammo'}
 emotion_orientation_map = {0: 'angry', 1: 'happy', 2: 'sad', 3: 'neutral'}
+
+@app.route('/')
+def serve_html():
+    return send_from_directory('.', 'website.html')
+
 @app.route('/healthcheck', methods=['GET'])
 def check():
     return jsonify({"Success": "Server up!"}), 200
@@ -83,8 +87,6 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain('localhost.pem', 'localhost-key.pem')
-    app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=('olive-nedi-39.tiiny.site.pem', 'olive-nedi-39.tiiny.site-key.pem'))
+    app.run(host="0.0.0.0", port=5001, debug=True)
 
 
