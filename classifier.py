@@ -156,13 +156,13 @@ if __name__ == "__main__":
             print("Creating a new model.")
             combined_model = create_combined_model(input_shape=(64, 64, 3), num_classes=4)
         #train model
-        combined_model.fit(
-            X_train,
-            {'decoded': X_train, 'classification': y_train_cat},
-            batch_size=64,
-            epochs=50,
-            validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
-        )
+        # combined_model.fit(
+        #     X_train,
+        #     {'decoded': X_train, 'classification': y_train_cat},
+        #     batch_size=64,
+        #     epochs=50,
+        #     validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
+        # )
 
         combined_model.save(model_path)
         print("Model saved after training.")
