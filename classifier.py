@@ -142,6 +142,7 @@ if __name__ == "__main__":
         y_test_cat = to_categorical(y_test, num_classes=4)
         
         if os.path.exists(model_path):
+            # Load model if exists
             print("Loading existing model and continuing training.")
             combined_model = load_model(model_path)
             combined_model.compile(
@@ -151,9 +152,10 @@ if __name__ == "__main__":
                 metrics={'classification': ['accuracy']}
             )
         else:
+            #create model otherwise
             print("Creating a new model.")
             combined_model = create_combined_model(input_shape=(64, 64, 3), num_classes=4)
-
+        #train model
         combined_model.fit(
             X_train,
             {'decoded': X_train, 'classification': y_train_cat},
@@ -170,7 +172,7 @@ if __name__ == "__main__":
         
         correct = 0
         wrong = 0
-
+        # run through testing data and find accuracy
         for i in range(len(y_test)):
             actual = head_orientation_map[y_test[i]]
             predicted = head_orientation_map[predicted_labels[i]]

@@ -44,6 +44,7 @@ def predict():
         img_array = np.array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
+        # Get predictions from all models
         decoded_img, orientation_predictions = orientation_classifier.predict(img_array)
         orientation_predicted_label = np.argmax(orientation_predictions[0])
         orientation = head_orientation_map[orientation_predicted_label]
@@ -86,6 +87,7 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+#Run on port 5001
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)
 

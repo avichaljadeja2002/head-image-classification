@@ -138,8 +138,8 @@ if __name__ == "__main__":
         print("No training data found. Ensure the subdirectories contain images for training.")
     else:
         model_path = 'emotion_model.h5'
-        y_train_cat = to_categorical(y_train, num_classes=2)
-        y_test_cat = to_categorical(y_test, num_classes=2)
+        y_train_cat = to_categorical(y_train, num_classes=4)
+        y_test_cat = to_categorical(y_test, num_classes=4)
         if os.path.exists(model_path):
             print("Loading existing model and continuing training.")
             combined_model = load_model(model_path)
