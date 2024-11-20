@@ -158,7 +158,7 @@ if __name__ == "__main__":
             X_train,
             {'decoded': X_train, 'classification': y_train_cat},
             batch_size=64,
-            epochs=10,
+            epochs=50,
             validation_data=(X_test, {'decoded': X_test, 'classification': y_test_cat})
         )
 
