@@ -1,7 +1,16 @@
 About the project:
 Our project consists of a bunch of images, jupyter notebook files, and python files.
 
-All of the models follow the same structure.
+faces4 is the original dataset from Carnegie Mellon: https://archive.ics.uci.edu/dataset/124/cmu+face+images
+faces is the dataset we used and then augmented. faces4 were in a weird format that we changed to .png in faces.
+
+brightness_batch - changes the brightness
+script_to_flip - flips the image
+rotate_batch - rotates the image 
+greyscale_to_colour_script - converts greyscale image to RGB
+
+All of the models follow the same structure. It is very straightforward if you want to add classes to 
+the different maps. 
 ---------------------------------------------------------------------------
 Instructions on how to run:
 website link: https://ad9f-137-112-225-48.ngrok-free.app/
