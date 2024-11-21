@@ -9,6 +9,8 @@ script_to_flip - flips the image
 rotate_batch - rotates the image 
 greyscale_to_colour_script - converts greyscale image to RGB
 
+Any file that ends in _model.h5 is the saved version of our model, so you don't need to retrain.
+
 All of the models follow the same structure. It is very straightforward if you want to add classes to 
 the different maps. 
 ---------------------------------------------------------------------------
