@@ -15,7 +15,8 @@ All of the models follow the same structure. It is very straightforward if you w
 the different maps. 
 ---------------------------------------------------------------------------
 Instructions on how to run:
-website link: https://ad9f-137-112-225-48.ngrok-free.app/
+1. Run app.py in your local terminal.
+2. Go to the 2nd link that app.py provides when you run it. (It will say * Running on (link))
 
 The website is very simple, just upload the image and hit the button to run.
 
