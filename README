@@ -16,7 +16,7 @@ the different maps.
 ---------------------------------------------------------------------------
 Instructions on how to run:
 1. Run app.py in your local terminal.
-2. Go to the 2nd link that app.py provides when you run it. (It will say * Running on (link))
+2. Go to the 1st link that app.py provides when you run it. (It will say * Running on (link))
 
 The website is very simple, just upload the image and hit the button to run.
 
