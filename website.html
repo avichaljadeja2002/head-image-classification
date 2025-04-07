@@ -127,7 +127,7 @@
         // Function to call healthcheck on page load
         async function checkHealth() {
             try {
-                const response = await fetch(' https://ad9f-137-112-225-48.ngrok-free.app/healthcheck', {
+                const response = await fetch('http://137.112.201.145:5001/predict', {
                     method: 'GET',
                     headers: {
                         'Accept': '*/*',
@@ -178,7 +178,7 @@
             formData.append("file", selectedFile);
 
             try {
-                const response = await fetch(' https://ad9f-137-112-225-48.ngrok-free.app/predict', {
+                const response = await fetch('http://137.112.201.145:5001/predict', {
                     //send image
                     method: 'POST',
                     body: formData
